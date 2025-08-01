@@ -60,29 +60,29 @@ def limpar_dados(df):
     # Remover coluna 'id' se existir
     if 'id' in df_clean.columns:
         df_clean = df_clean.drop('id', axis=1)
-        print("✓ Coluna 'id' removida")
+        print(" Coluna 'id' removida")
     
     # Converter diagnóstico para numérico (M=1, B=0)
     le = LabelEncoder()
     df_clean['diagnosis'] = le.fit_transform(df_clean['diagnosis'])
-    print("✓ Diagnostico convertido: M=1 (maligno), B=0 (benigno)")
+    print(" Diagnostico convertido: M=1 (maligno), B=0 (benigno)")
     
     # Verificar dados ausentes
     missing_data = df_clean.isnull().sum()
     if missing_data.sum() > 0:
-        print(f"⚠ Dados ausentes encontrados:")
+        print(f" Dados ausentes encontrados:")
         print(missing_data[missing_data > 0])
     else:
-        print("✓ Nenhum dado ausente encontrado")
+        print(" Nenhum dado ausente encontrado")
     
     # Verificar valores duplicados
     duplicates = df_clean.duplicated().sum()
     if duplicates > 0:
-        print(f"⚠ {duplicates} linhas duplicadas encontradas")
+        print(f" {duplicates} linhas duplicadas encontradas")
         df_clean = df_clean.drop_duplicates()
-        print("✓ Linhas duplicadas removidas")
+        print(" Linhas duplicadas removidas")
     else:
-        print("✓ Nenhuma linha duplicada encontrada")
+        print(" Nenhuma linha duplicada encontrada")
     
     print(f"\nDimensões após limpeza: {df_clean.shape[0]} linhas e {df_clean.shape[1]} colunas")
     
@@ -133,7 +133,7 @@ def criar_visualizacoes(df):
     
     # Adicionar valores nas barras
     for i, v in enumerate(diagnosis_counts.values):
-        plt.text(i, v + 5, str(v), ha='center', va='bottom', fontweight='bold')
+        plt.text(i, v + max(v * 0.05, 10), str(v), ha='center', va='bottom', fontweight='bold', fontsize=10)
     
     # 2. Histograma do radius_mean
     plt.subplot(2, 3, 2)
@@ -178,9 +178,9 @@ def criar_visualizacoes(df):
     
     sns.boxplot(data=df_melted, x='Feature', y='Value', hue='diagnosis')
     plt.title('Boxplot das Caracteristicas por Diagnostico', fontweight='bold')
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=45, ha='right')
     
-    plt.tight_layout()
+    plt.tight_layout(pad=2.0)
     plt.savefig('visualizacoes_gerais.png', dpi=300, bbox_inches='tight')
     plt.show()
     
@@ -203,9 +203,9 @@ def criar_visualizacoes(df):
     mask = np.triu(np.ones_like(correlation_matrix, dtype=bool))
     sns.heatmap(correlation_matrix, mask=mask, annot=True, cmap='coolwarm', 
                 center=0, square=True, linewidths=0.5, cbar_kws={"shrink": .8})
-    plt.title('Mapa de Calor - 10 Variaveis Mais Correlacionadas com Diagnostico', 
-              fontweight='bold', fontsize=14)
-    plt.tight_layout()
+    plt.title('Mapa de Calor - 10 Variaveis Mais\nCorrelacionadas com Diagnostico', 
+              fontweight='bold', fontsize=12)
+    plt.tight_layout(pad=2.0)
     plt.savefig('mapa_calor_correlacao.png', dpi=300, bbox_inches='tight')
     plt.show()
     
@@ -244,15 +244,15 @@ def analisar_agrupamentos(df):
     plt.xlabel('Caracteristicas')
     plt.ylabel('Valor Medio')
     plt.title('Comparacao das Caracteristicas por Diagnostico', fontweight='bold')
-    plt.xticks(x, [col.replace('_mean', '').title() for col in important_features], rotation=45)
+    plt.xticks(x, [col.replace('_mean', '').title() for col in important_features], rotation=45, ha='right')
     plt.legend()
     plt.grid(True, alpha=0.3)
     
-    plt.tight_layout()
+    plt.tight_layout(pad=2.0)
     plt.savefig('comparacao_diagnosticos.png', dpi=300, bbox_inches='tight')
     plt.show()
     
-    print("✓ Grafico de comparacao salvo como 'comparacao_diagnosticos.png'")
+    print(" Grafico de comparacao salvo como 'comparacao_diagnosticos.png'")
 
 def gerar_insights(df):
     """
@@ -344,11 +344,6 @@ def main():
     print("   - visualizacoes_gerais.png")
     print("   - mapa_calor_correlacao.png")
     print("   - comparacao_diagnosticos.png")
-    print("\nProximos passos sugeridos:")
-    print("   - Preparar dados para modelagem")
-    print("   - Implementar algoritmos de machine learning")
-    print("   - Avaliar performance dos modelos")
-    print("   - Otimizar hiperparâmetros")
 
 if __name__ == "__main__":
     main() 
